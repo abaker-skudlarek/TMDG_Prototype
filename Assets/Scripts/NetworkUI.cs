@@ -2,8 +2,9 @@ using UnityEngine;
 using System.Collections;
 using QFSW.QC;
 using Unity.Netcode;
+using UnityEngine.UI;
 
-public class NetcodeStartUI : MonoBehaviour 
+public class NetworkUI : MonoBehaviour 
 {
     // ----------------------------------------------------------------- // 
     // --------------------------- Constants --------------------------- // 
@@ -22,7 +23,8 @@ public class NetcodeStartUI : MonoBehaviour
     
     
     // Serialized Field Variables
-    
+    [SerializeField] private Button createGameButton;
+    [SerializeField] private Button joinGameButton;
     
     // ----------------------------------------------------------------- // 
     // --------------------------- Functions --------------------------- // 
@@ -30,45 +32,28 @@ public class NetcodeStartUI : MonoBehaviour
     	
 	private void Awake() 
 	{
-	
-	}
-	
-    // -------------------------------------------------------------------------------------------------------------- // 
- 
-	private void Start() 
-	{
-	
-	}
-	
-    // -------------------------------------------------------------------------------------------------------------- // 
-	
-	private void Update() 
-	{
-	
+		createGameButton.onClick.AddListener(() => {
+			Debug.Log("CreateGameButton clicked");
+			
+			NetworkConnectivityManager.Instance.CreateGame();
+			
+			Hide();
+		});	
+			
+		joinGameButton.onClick.AddListener(() => {
+			Debug.Log("JoinGameButton clicked");
+			
+			NetworkConnectivityManager.Instance.JoinGame();
+			
+			Hide();
+		});	
 	}
 	
     // -------------------------------------------------------------------------------------------------------------- // 
 
-	[Command] 
-    private void StartHost()
+    private void Hide()
     {
-		Debug.Log("Starting Host"); 
-	    NetworkManager.Singleton.StartHost();
-
-	    Cursor.lockState = CursorLockMode.Locked;
-	    Cursor.visible = false;
-    }
-    
-    // -------------------------------------------------------------------------------------------------------------- // 
-    
-	[Command] 
-    private void StartClient()
-    {
-		Debug.Log("Starting Client"); 
-	    NetworkManager.Singleton.StartClient();
-	    
-	    Cursor.lockState = CursorLockMode.Locked;
-	    Cursor.visible = false;
+	    gameObject.SetActive(false);
     }
     
     // -------------------------------------------------------------------------------------------------------------- // 
