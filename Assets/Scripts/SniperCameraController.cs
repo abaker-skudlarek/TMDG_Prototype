@@ -32,16 +32,14 @@ public class SniperCameraController : MonoBehaviour
 	// Serialized Field Variables
 	[Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]	
 	[SerializeField] private GameObject CinemachineCameraTarget;
+	[Tooltip("Speed of camera movement in response to physical mouse movement")]
+	public float MouseSensitivity = 1f;	
     [Tooltip("Rotation speed of the camera")]
-    [SerializeField] private float RotationSpeed = 1.0f;
-    [Tooltip("How far in degrees the camera can be rotated up")]
-    [SerializeField] private float TopClamp;
-    [Tooltip("How far in degrees the camera can be rotated down")]
-    [SerializeField] private float BottomClamp;
-    [Tooltip("How far in degrees the camera can be rotated right")]
-    [SerializeField] private float RightClamp;
-    [Tooltip("How far in degrees the camera can be rotated left")]
-    [SerializeField] private float LeftClamp;
+    [SerializeField] private float RotationSpeed = 0.5f;
+    [Tooltip("The total amount of degrees the camera can be moved left and right")]
+    [SerializeField] private float YAxisRangeOfMotion;
+    [Tooltip("The total amount of degrees the camera can be moved up and down")]
+    [SerializeField] private float XAxisRangeOfMotion;
     
     // ----------------------------------------------------------------- // 
     // --------------------------- Functions --------------------------- // 
@@ -82,25 +80,21 @@ public class SniperCameraController : MonoBehaviour
 	
     private void CameraMovement()
     {
-	    // TODO: There is noise on this camera. I think from the main cinemachine brain? we need a way to turn that off when we are the sniper
-
 	    if (_input.look.sqrMagnitude >= INPUT_THRESHOLD) 
 	    {
-		   // If the current device is a mouse, we don't want to multiply by delta time. If it's a controller, we do
-		   float deltaTimeMultiplier = IsCurrentDeviceMouse() ? 1.0f : Time.deltaTime;
-		   
-		   // Adjust our pitch and rotation velocity based on the look of the proper axis
-		   _xAxisRotation += _input.look.y * RotationSpeed * deltaTimeMultiplier;
-		   _yAxisRotation += _input.look.x * RotationSpeed * deltaTimeMultiplier;
-
-		   // Clamp our pitch and rotation before applying it
-		   // TODO: Bottom clamp is actually changing how high up we can look, and Top clamp is actually changing how far down we can look. They seem backwards?
-		   // TODO: NOTE: THE REASON for this is because the model is flipped 90 degrees. So looking up is moving the X value down, and looking down is moving the X value up
-		   _xAxisRotation = ClampAngle(_xAxisRotation, BottomClamp, TopClamp);
-		   _yAxisRotation = ClampAngle(_yAxisRotation, LeftClamp, RightClamp);
-			
-		   // Rotate the whole object left, right, up, and down
-		   transform.rotation = Quaternion.Euler(_xAxisRotation, _yAxisRotation, 0.0f);
+		    // If the current device is a mouse, we don't want to multiply by delta time. If it's a controller, we do
+		    float deltaTimeMultiplier = IsCurrentDeviceMouse() ? 1.0f : Time.deltaTime;
+		    
+			// Adjust our pitch and rotation velocity based on the look of the proper axis
+		    _xAxisRotation += _input.look.y * RotationSpeed * MouseSensitivity * deltaTimeMultiplier;
+		    _yAxisRotation += _input.look.x * RotationSpeed * MouseSensitivity * deltaTimeMultiplier;
+			  	
+		    // Clamp our pitch and rotation before applying it. Divide the total range of motion by 2, so we have equal movement on both sides
+		    _xAxisRotation = ClampAngle(_xAxisRotation, -(XAxisRangeOfMotion/2), (XAxisRangeOfMotion/2));
+		    _yAxisRotation = ClampAngle(_yAxisRotation, -(YAxisRangeOfMotion/2), (YAxisRangeOfMotion/2));
+		 	
+		    // Rotate the whole object left, right, up, and down
+		    transform.rotation = Quaternion.Euler(_xAxisRotation, _yAxisRotation, 0.0f);
 	    }
     }
 	 
