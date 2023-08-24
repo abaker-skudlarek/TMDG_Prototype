@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -250,11 +250,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CinemachineCameraTarget: {fileID: 842242365}
+  MouseSensitivity: 5
   RotationSpeed: 0.5
-  TopClamp: 10
-  BottomClamp: -30
-  RightClamp: 50
-  LeftClamp: -50
+  YAxisRangeOfMotion: 100
+  XAxisRangeOfMotion: 30
 --- !u!114 &128268330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5104,7 +5103,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8150164465356195372, guid: da6280a95026684409e45a8839d2ed3e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
